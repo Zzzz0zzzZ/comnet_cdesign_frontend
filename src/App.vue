@@ -37,6 +37,7 @@ import {reactive, ref} from 'vue'
 import {useRouter} from "vue-router";
 import {sessionGet, sessionRemove, sessionSet} from "./utils/myStorage.js";
 import {useChatStore} from "./stores/chatStore.js";
+import {useUserStore} from "./stores/userStore.js";
 
 const activeIndex = ref('0')
 const router = useRouter()
@@ -78,6 +79,8 @@ router.beforeEach((to, from, next) => {
         store.setupWebSocket();
         sessionSet("ws_connection", true)
         username.value = sessionGet("bjut_im_user").username
+        const userStore = useUserStore()
+        userStore.userinfo = sessionGet("bjut_im_user")
       }
     }
   }
