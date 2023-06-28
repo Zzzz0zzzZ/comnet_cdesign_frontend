@@ -18,7 +18,7 @@
           <el-sub-menu index="2">
             <template #title><b>我的IMS&nbsp;&nbsp;</b>
             </template>
-            <el-menu-item index="2-1"><b>个人主页&nbsp;&nbsp;(用户: {{ sessionGet("bjut_im_user").username }})</b></el-menu-item>
+            <el-menu-item index="2-1"><b>个人主页&nbsp;&nbsp;(用户: {{ username }})</b></el-menu-item>
             <el-menu-item index="2-2"><b>资料设置</b></el-menu-item>
             <el-menu-item index="2-3"><b>退出登录</b></el-menu-item>
           </el-sub-menu>
@@ -62,6 +62,7 @@ const state = reactive({
   showMenu: true,
   currentPath: '/'
 })
+const username = ref("");
 
 router.beforeEach((to, from, next) => {
   if (to.path === "/login" || to.path === "/register") {
@@ -76,6 +77,7 @@ router.beforeEach((to, from, next) => {
       if (!sessionGet("ws_connection")) {
         store.setupWebSocket();
         sessionSet("ws_connection", true)
+        username.value = sessionGet("bjut_im_user").username
       }
     }
   }
