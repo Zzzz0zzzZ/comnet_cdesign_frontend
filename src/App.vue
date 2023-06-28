@@ -18,7 +18,7 @@
           <el-sub-menu index="2">
             <template #title><b>我的IMS&nbsp;&nbsp;</b>
             </template>
-            <el-menu-item index="2-1"><b>个人主页</b></el-menu-item>
+            <el-menu-item index="2-1"><b>个人主页&nbsp;&nbsp;(用户: {{ sessionGet("bjut_im_user").username }})</b></el-menu-item>
             <el-menu-item index="2-2"><b>资料设置</b></el-menu-item>
             <el-menu-item index="2-3"><b>退出登录</b></el-menu-item>
           </el-sub-menu>
@@ -35,10 +35,12 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import {useRouter} from "vue-router";
-import {localGet, localRemove} from "./utils/localStorage.js";
+import {sessionGet, sessionRemove, sessionSet} from "./utils/myStorage.js";
+import {useChatStore} from "./stores/chatStore.js";
 
 const activeIndex = ref('0')
 const router = useRouter()
+const store = useChatStore()
 
 const selectActionMap = {
   "0": () => router.push("/home"),
@@ -46,8 +48,10 @@ const selectActionMap = {
   "2-1": () => router.push("/userinfo"),
   "2-2": () => router.push("/settings"),
   "2-3": () => {
-    localRemove("bjut_im_login")
-    localRemove("bjut_im_user")
+    sessionRemove("bjut_im_login")
+    sessionRemove("bjut_im_user")
+    sessionRemove("ws_connection")
+    store.closeWebSocketConnection()
     router.push("/login")
   }
 }
@@ -64,16 +68,24 @@ router.beforeEach((to, from, next) => {
     next()
   }
   else {
-    console.log(localGet("bjut_im_login"))
-    if (!localGet("bjut_im_login")) {
+    if (!sessionGet("bjut_im_login")) {
       next({path: '/login'})
     }
     else {
       next()
+      if (!sessionGet("ws_connection")) {
+        store.setupWebSocket();
+        sessionSet("ws_connection", true)
+      }
     }
   }
   state.showMenu = !noMenu.includes(to.path)
   state.currentPath = to.path
+})
+window.addEventListener("beforeunload", () =>{
+  console.log("准备刷新了")
+  // 期待重新建立ws连接
+  sessionSet("ws_connection", false)
 })
 
 </script>

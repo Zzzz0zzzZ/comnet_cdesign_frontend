@@ -36,7 +36,7 @@ import {authUserLogin} from "../api/auth.js";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import { UserFilled, Lock } from '@element-plus/icons-vue'
-import {localSet} from "../utils/localStorage.js";
+import {sessionSet} from "../utils/myStorage.js";
 
 const userLoginInfo = reactive({
   username: '',
@@ -49,8 +49,8 @@ const onClickLogin = async function () {
   if (res.msg === '登录成功') {
     console.log(res)
     ElMessage.success(res.msg)
-    localSet("bjut_im_login", true)
-    localSet("bjut_im_user", res.data.user)
+    sessionSet("bjut_im_login", true)
+    sessionSet("bjut_im_user", res.data.user)
     await router.push("/home")
   }
   else {
