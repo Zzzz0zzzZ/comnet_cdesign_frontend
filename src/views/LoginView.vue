@@ -48,13 +48,11 @@ const onClickLogin = async function () {
   const res = await authUserLogin(userLoginInfo.username, userLoginInfo.password)
   if (res.msg === '登录成功') {
     console.log(res)
-    ElMessage.success(res.msg)
     sessionSet("bjut_im_login", true)
     sessionSet("bjut_im_user", res.data.user)
     await router.push("/home")
   }
   else {
-    ElMessage.error(res.msg)
     userLoginInfo.password = ''
     userLoginInfo.username = ''
   }

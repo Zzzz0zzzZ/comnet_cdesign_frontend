@@ -19,6 +19,10 @@ axios.interceptors.response.use(res => {
         ElMessage.error("操作出错")
         return Promise.reject(res)
     }
+    if (res.data.msg_type === "error")
+        ElMessage.error(res.data.msg)
+    else if (res.data.msg_type === "success")
+        ElMessage.success(res.data.msg)
 
     return res.data
 })

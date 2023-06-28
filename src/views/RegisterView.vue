@@ -53,11 +53,9 @@ const onClickRegister = async function () {
   }
   const res = await authUserRegister(userRegisterInfo.username, userRegisterInfo.password)
   if (res.msg === "创建成功") {
-    ElMessage.success(res.msg)
     history.back()
   }
   else {
-    ElMessage.error(res.msg)
     userRegisterInfo.username = ''
     userRegisterInfo.password = ''
     userRegisterInfo.password_confirm = ''
