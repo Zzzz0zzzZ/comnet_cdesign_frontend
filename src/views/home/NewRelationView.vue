@@ -6,7 +6,7 @@
       border
   >
     <template #extra>
-      <el-button type="primary">添加新朋友/创建新群聊</el-button>
+      <el-button type="primary" @click="onClickCreateRelationBtn">添加新朋友/创建新群聊</el-button>
     </template>
     <el-descriptions-item>
       <template #label>
@@ -38,8 +38,8 @@
     <el-card class="box-card">
       <template #header>
         <div class="card-header" style="position: relative; top: 0; left: 0; right: 0;">
-          <span style="font-size: 20px"><b>新关系</b></span>
-          <el-button :icon="RefreshRight" circle/>
+          <span style="font-size: 20px"><b>我收到的好友申请</b></span>
+          <el-button :icon="RefreshRight" circle @click="loadApplications"/>
         </div>
       </template>
       <div>
@@ -75,8 +75,8 @@
     <el-card class="box-card">
       <template #header>
         <div class="card-header" style="position: relative; top: 0; left: 0; right: 0;">
-          <span style="font-size: 20px"><b>我的申请</b></span>
-          <el-button :icon="RefreshRight" circle/>
+          <span style="font-size: 20px"><b>我发出的好友申请</b></span>
+          <el-button :icon="RefreshRight" circle @click="loadApplications"/>
         </div>
       </template>
       <div>
@@ -100,7 +100,7 @@
                   <el-tag type="success" :size="el_tag_size">已添加</el-tag>
                 </div>
                 <div v-else>
-                  <el-tag type="primary" :size="el_tag_size">申请中</el-tag>
+                  <el-tag type="" :size="el_tag_size">申请中</el-tag>
                 </div>
               </div>
             </el-card>
@@ -109,7 +109,10 @@
       </div>
     </el-card>
   </div>
-
+  <PopCreateRelation :canIShowDialog="canIShowDialog"
+                     @doNotShowDialog="doNotShowDialog"
+                     @loadApplications="loadApplications"
+  />
 </template>
 
 <script setup>
@@ -119,6 +122,7 @@ import {acceptUserApplication, getUserApplications, rejectUserApplication} from 
 import {sessionGet} from "../../utils/myStorage.js";
 import {useUserStore} from "../../stores/userStore.js";
 import {Tickets, User,} from '@element-plus/icons-vue'
+import PopCreateRelation from "../../components/PopCreateRelation.vue";
 
 const store = useUserStore()
 const el_tag_size = ref("large")
@@ -146,6 +150,12 @@ const onClickReject = async function (application_id) {
   await rejectUserApplication(application_id)
   await loadApplications()
 }
+
+// 创建新关系
+const canIShowDialog = ref(false)
+const doNotShowDialog = () => canIShowDialog.value = false
+const onClickCreateRelationBtn = () => canIShowDialog.value = true
+
 </script>
 
 <style scoped>
