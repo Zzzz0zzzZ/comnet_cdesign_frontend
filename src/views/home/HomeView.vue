@@ -9,8 +9,12 @@
               <el-tab-pane label="群聊" name="群聊"></el-tab-pane>
             </el-tabs>
           </el-card>
-          <el-card class="card-item" shadow="never" :body-style="{padding: '10px', width: '15vw'}"
+          <el-card class="card-item"
+                   shadow="never"
+                   :body-style="{padding: '10px', width: '15vw'}"
+                   :class="{ 'selected': selectedCard === friend }"
                    v-for="friend in friendList" :key="friend"
+                   @click="onSelectFriendCard(friend)"
           >
                 <el-avatar :size="'default'" :src="avatarUrl"/>
                   {{ friend.username }}
@@ -22,15 +26,11 @@
 
               与
               <el-icon><user /></el-icon>
+              {{ activedFriendName }}
               的对话
             </div>
             <div class="chat-layout-detail">
                 <div>
-                  <h1>User1 Chat</h1>
-                  <div>
-                    <input type="text" v-model="perPartMessage.text" autocomplete="off" />
-                    <button @click="send">Send</button>
-                  </div>
                   <ul id="messages">
                     <li v-for="message in messages" :key="message.id">{{ message.content }}</li>
                   </ul>
@@ -39,16 +39,15 @@
             <div class="chat-layout-footer">
               <el-input v-model="perPartMessage.text"
                         type="textarea"
-                        placeholder="请输入要发送的消息, 按Enter键发送"
+                        placeholder="请输入要发送的消息, 按Enter键发送, 按Ctrl+Enter键换行..."
                         :rows="5"
-                        @keyup.enter="send"
+                        @keyup.enter="handleKeyCode($event)"
               />
             </div>
           </div>
         </el-card>
       </div>
     </template>
-
   </el-card>
 </template>
 
@@ -57,25 +56,28 @@ import { useChatStore } from "../../stores/chatStore.js";
 import {reactive, ref, watch} from 'vue';
 import {useUserStore} from "../../stores/userStore.js";
 import {getUserFriends} from "../../api/relationship.js";
-import {Tickets, User,} from '@element-plus/icons-vue'
-const activeName = ref("朋友")
+import {User} from '@element-plus/icons-vue'
 
+// 切换标签
+const activeName = ref("朋友")
+// stores
 const store = useChatStore();
 const userStore = useUserStore()
-
+// 头像链接
 const avatarUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
-
+// 朋友关系列表
 const friendList = ref([])
+// 好友
 const loadFriendList = async function () {
   const res = await getUserFriends(userStore.userinfo.uuid)
   friendList.value = res.data.friends
   console.log(res.data.friends)
 }
-
+// 群
 const loadGroupList = async function () {
   console.log("加载群聊列表")
 }
-
+// 监听tab变化
 watch(activeName, async (newName) => {
   if (newName === "朋友") {
     friendList.value = []
@@ -87,15 +89,38 @@ watch(activeName, async (newName) => {
   }
 }, {immediate: true})
 
+// 消息通讯
 const messages = store.messages;
 const perPartMessage = reactive({
-  to: "cb158eec-2f89-4ef2-a4e4-02ae2b73879d",
+  to: "",
   text: "",
-  type: "single"
+  type: activeName.value === "朋友" ? "single" : "group"
 })
 
+// 发送
 const send = function () {
   store.sendMessage(perPartMessage);
+  perPartMessage.text = ""
+}
+
+// 对enter和ctrl+enter做判断
+const handleKeyCode = function (event) {
+  console.log(event)
+  if (event.ctrlKey && event.keyCode===13) {
+      perPartMessage.text = perPartMessage.text + '\n';
+    } else {
+      event.preventDefault();
+      send()
+    }
+}
+
+// 处理选中联系人后的逻辑
+const activedFriendName = ref("")
+const selectedCard = ref("")
+const onSelectFriendCard = function (friend) {
+  selectedCard.value = friend
+  perPartMessage.to = friend.uuid
+  activedFriendName.value = friend.username
 }
 </script>
 
@@ -136,7 +161,20 @@ const send = function () {
   justify-content: space-around;
   align-items: center;
   margin: 10px;
+  background-color: white;
+  transition: 0.2s ease;
 }
+
+.card-item:hover {
+  cursor: pointer;
+}
+
+.card-item:active,
+.card-item.selected {
+  border-color: #589ef8;
+  color: #589ef8;
+}
+
 .chat-layout {
   display: flex;
   flex-direction: column;
@@ -153,6 +191,8 @@ const send = function () {
 }
 .chat-layout-detail {
   flex-grow: 1;
+  max-height: 50vh;
+  overflow: scroll;
   width: 100%;
 }
 .chat-layout-footer {
