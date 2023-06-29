@@ -32,7 +32,12 @@
             <div class="chat-layout-detail">
                 <div>
                   <ul id="messages">
-                    <li v-for="message in messages" :key="message.id">{{ message.content }}</li>
+                    <li v-for="message in messages" :key="message.time">
+                      {{message.time}}
+                      {{ message.from === userStore.userinfo.uuid ? "(me)" : "(friend)" }}
+                      :&nbsp;
+                      {{ message.msg }}
+                    </li>
                   </ul>
                 </div>
             </div>
@@ -89,13 +94,35 @@ watch(activeName, async (newName) => {
   }
 }, {immediate: true})
 
+// 处理选中联系人后的逻辑
+const activedFriendName = ref("")
+const activedFriendUuid = ref("")
+const selectedCard = ref("")
+
 // 消息通讯
-const messages = store.messages;
+const chatData = store.chat.data  // 原始数据
+const messages = ref([])  // 渲染数据
+// 监听变化，更改渲染数据
+watch(activedFriendUuid, (newVal) => {
+  if (!chatData[newVal]){
+    chatData[newVal] = []
+  }
+  messages.value = chatData[newVal]
+  console.log(newVal, chatData[newVal])
+}, {immediate: true})
+
+
 const perPartMessage = reactive({
   to: "",
   text: "",
   type: activeName.value === "朋友" ? "single" : "group"
 })
+const onSelectFriendCard = function (friend) {
+  selectedCard.value = friend
+  perPartMessage.to = friend.uuid
+  activedFriendName.value = friend.username
+  activedFriendUuid.value = friend.uuid
+}
 
 // 发送
 const send = function () {
@@ -114,14 +141,6 @@ const handleKeyCode = function (event) {
     }
 }
 
-// 处理选中联系人后的逻辑
-const activedFriendName = ref("")
-const selectedCard = ref("")
-const onSelectFriendCard = function (friend) {
-  selectedCard.value = friend
-  perPartMessage.to = friend.uuid
-  activedFriendName.value = friend.username
-}
 </script>
 
 <style scoped>
