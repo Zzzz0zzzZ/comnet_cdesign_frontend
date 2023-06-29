@@ -26,10 +26,10 @@
           <el-icon style="margin-right: 8px">
             <tickets />
           </el-icon>
-          邀请码
+          通讯号
         </div>
       </template>
-      <el-tag size="large">{{ store.userinfo.udid }}</el-tag>
+      <el-tag size="large">{{ store.userinfo.uuid }}</el-tag>
     </el-descriptions-item>
 
   </el-descriptions>
@@ -57,10 +57,10 @@
                   <p>备注信息：{{ relation.apply_text }}</p>
                 </div>
                   <div v-if="relation.apply_status === 'FAILED'">
-                    <el-tag type="warning">已拒绝</el-tag>
+                    <el-tag type="warning" :size="el_tag_size">已拒绝</el-tag>
                   </div>
                   <div v-else-if="relation.apply_status === 'SUCCESS'">
-                    <el-tag type="success">已添加</el-tag>
+                    <el-tag type="success" :size="el_tag_size">已添加</el-tag>
                   </div>
                   <div v-else>
                     <el-button type="danger" @click="onClickReject(relation.id)">拒绝</el-button>
@@ -94,13 +94,13 @@
                   <p>备注信息：{{ relation.apply_text }}</p>
                 </div>
                 <div v-if="relation.apply_status === 'FAILED'">
-                  <el-tag type="warning">被拒绝</el-tag>
+                  <el-tag type="warning" :size="el_tag_size">被拒绝</el-tag>
                 </div>
                 <div v-else-if="relation.apply_status === 'SUCCESS'">
-                  <el-tag type="success">已添加</el-tag>
+                  <el-tag type="success" :size="el_tag_size">已添加</el-tag>
                 </div>
                 <div v-else>
-                  <el-tag type="primary">申请中</el-tag>
+                  <el-tag type="primary" :size="el_tag_size">申请中</el-tag>
                 </div>
               </div>
             </el-card>
@@ -115,13 +115,13 @@
 <script setup>
 import { RefreshRight } from "@element-plus/icons-vue";
 import {reactive, ref} from "vue";
-import {getUserApplications, rejectUserApplication} from "../../api/application.js";
+import {acceptUserApplication, getUserApplications, rejectUserApplication} from "../../api/application.js";
 import {sessionGet} from "../../utils/myStorage.js";
 import {useUserStore} from "../../stores/userStore.js";
 import {Tickets, User,} from '@element-plus/icons-vue'
 
 const store = useUserStore()
-
+const el_tag_size = ref("large")
 // 加载新关系
 const application_from_me = ref([])
 const application_to_me = ref([])
@@ -137,8 +137,8 @@ loadApplications()
 
 // 处理接受
 const onClickAccept = async function (application_id) {
-  // TODO: 处理接受
-  console.log("接受")
+  await acceptUserApplication(application_id)
+  await loadApplications()
 }
 
 // 处理拒绝
