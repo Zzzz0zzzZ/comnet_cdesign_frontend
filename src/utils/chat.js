@@ -6,3 +6,9 @@ export function createChatMsg(msg, from, time) {
         "time": time
     }
 }
+
+// 合并两个历史记录
+export function combineTwoHistory(one, two) {
+    one.data.push([...two.data])
+    return JSON.parse(JSON.stringify(one))
+}
