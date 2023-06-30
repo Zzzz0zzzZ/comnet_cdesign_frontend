@@ -35,7 +35,7 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import {useRouter} from "vue-router";
-import {sessionGet, sessionRemove, sessionSet} from "./utils/myStorage.js";
+import {localSet, sessionGet, sessionRemove, sessionSet} from "./utils/myStorage.js";
 import {useChatStore} from "./stores/chatStore.js";
 import {useUserStore} from "./stores/userStore.js";
 
@@ -49,9 +49,19 @@ const selectActionMap = {
   "2-1": () => router.push("/userinfo"),
   "2-2": () => router.push("/settings"),
   "2-3": () => {
+
+    const hist = sessionGet("chatHistory")
+    sessionRemove("chatHistory")
+    localSet(`chatHistory_${sessionGet("bjut_im_user").uuid}`, hist)
+
     sessionRemove("bjut_im_login")
     sessionRemove("bjut_im_user")
     sessionRemove("ws_connection")
+
+    store.chat.uuid = ""
+    store.chat.data = {}
+
+
     store.closeWebSocketConnection()
     router.push("/login")
   }
@@ -91,6 +101,8 @@ window.addEventListener("beforeunload", () =>{
   console.log("准备刷新了")
   // 期待重新建立ws连接
   sessionSet("ws_connection", false)
+  const hist = sessionGet("chatHistory")
+  localSet(`chatHistory_${sessionGet("bjut_im_user").uuid}`, hist)
 })
 
 </script>
