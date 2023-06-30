@@ -10,27 +10,27 @@ const routes = [
     {
     path: '/home',
     name: 'home',
-    component: () => import('../views/home/HomeView.vue')
+    component: () => import(/* webpackChunkName: "home" */'../views/home/HomeView.vue')
     },
     {
         path: '/register',
         name: 'register',
-        component: () => import('../views/RegisterView.vue')
+        component: () => import(/* webpackChunkName: "register" */'../views/RegisterView.vue')
     },
     {
         path: '/relation',
         name: 'relation',
-        component: () => import('../views/home/NewRelationView.vue')
+        component: () => import(/* webpackChunkName: "relation" */'../views/home/NewRelationView.vue')
     },
     {
         path: '/userinfo',
         name: 'userinfo',
-        component: () => import('../views/home/UserInfoView.vue')
+        component: () => import(/* webpackChunkName: "userinfo" */'../views/home/UserInfoView.vue')
     },
     {
         path: '/settings',
         name: 'settings',
-        component: () => import('../views/home/SettingsView.vue')
+        component: () => import(/* webpackChunkName: "settings" */'../views/home/SettingsView.vue')
     }
 ]
 
