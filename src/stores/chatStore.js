@@ -10,7 +10,7 @@ export const useChatStore = defineStore('chatStore', {
             ws_connection: false,
             messages: [],
             chat: {
-                "uuid": sessionGet("bjut_im_user").uuid,
+                "uuid": "",
                 "data": {},
             }
         }
@@ -64,5 +64,15 @@ export const useChatStore = defineStore('chatStore', {
     },
     getters: {
 
+    },
+    persist: {
+        enabled: true,
+        strategies: [
+            {
+                key: `chatHistory`,
+                storage: sessionStorage,
+                paths: ['chat']
+            }
+        ]
     }
 })
