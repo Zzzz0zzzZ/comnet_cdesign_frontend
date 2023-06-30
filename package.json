@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
-    "build": "vite build --mode beta",
-    "preview": "vite preview --mode release"
+    "build:beta": "vite build --mode beta",
+    "build:release": "vite build --mode release",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",

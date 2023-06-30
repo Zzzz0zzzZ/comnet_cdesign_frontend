@@ -1,7 +1,7 @@
 <template>
   <div class="register-container">
     <div class="flex-div-title">
-      <img src="src/assets/logo_frontpage.png" style="height: 65px">
+      <img src="/src/assets/logo_frontpage.png" style="height: 65px">
     </div>
         <div class="flex-div">
           <el-form

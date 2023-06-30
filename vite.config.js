@@ -1,10 +1,26 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import path from 'path'
+// import alias from "@rollup/plugin-alias";
+// import resolve from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default ({ mode }) => defineConfig({
   plugins: [vue()],
-
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, 'src')
+    },
+  },
+  // build: {
+  //   rollupOptions: {
+  //     plugins:[
+  //       resolve()
+  //     ]
+  //   },
+  // },
+  base: './',
   server: {
     proxy: {
       '/api': {

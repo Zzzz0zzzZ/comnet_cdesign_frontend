@@ -1,4 +1,4 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template>
   <div class="common-layout">
     <el-container v-if="state.showMenu">
       <el-header>
@@ -10,7 +10,7 @@
             @select="handleSelect"
         >
           <el-menu-item index="0">
-            <img src="src/assets/bjut.png" style="height: 30px"/>
+            <img src="/src/assets/bjut.png" style="height: 30px"/>
             <b>&nbsp;&nbsp;BJUT-IM System</b></el-menu-item>
 
           <div class="flex-grow" />
@@ -107,7 +107,7 @@ window.addEventListener("beforeunload", () =>{
 
 </script>
 
-<style>
+<style scoped>
 .flex-grow {
   flex-grow: 1;
 }

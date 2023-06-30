@@ -1,7 +1,7 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template>
   <div class="login-container">
     <div class="flex-div-title">
-      <img src="src/assets/logo_frontpage.png" style="height: 65px">
+      <img src="/src/assets/logo_frontpage.png" style="height: 65px">
     </div>
     <div class="flex-div">
       <el-form
