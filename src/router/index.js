@@ -28,9 +28,9 @@ const routes = [
         component: () => import(/* webpackChunkName: "userinfo" */'../views/home/UserInfoView.vue')
     },
     {
-        path: '/settings',
-        name: 'settings',
-        component: () => import(/* webpackChunkName: "settings" */'../views/home/SettingsView.vue')
+        path: '/change_password',
+        name: 'change_password',
+        component: () => import(/* webpackChunkName: "change_password" */'../views/home/ChangePasswordView.vue')
     }
 ]
 

@@ -8,6 +8,15 @@ export function authUserLogin(username, password) {
     })
 }
 
+// 更改密码
+export function changeUserPassword (uuid, old, new_) {
+    return axios.post("/user/update/password", {
+        uuid: uuid,
+        old_password: old,
+        new_password: new_
+    })
+}
+
 // 注册
 export function authUserRegister(username, password) {
     return axios.post("/user", {

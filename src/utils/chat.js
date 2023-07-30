@@ -1,9 +1,10 @@
 // 创建一条消息
-export function createChatMsg(msg, from, time) {
+export function createChatMsg(msg, from, time, msg_type) {
     return {
         "msg": msg,
         "from": from,
-        "time": time
+        "time": time,
+        "msg_type": msg_type
     }
 }
 

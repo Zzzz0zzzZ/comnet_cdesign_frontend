@@ -8,3 +8,17 @@ export function getUserFriends(uuid) {
         }
     });
 }
+
+// 获取群聊列表
+export function getUserGroups(uuid) {
+    return axios.post(`/group/${uuid}`)
+}
+
+// 创建群聊
+export function createUserGroup (uuid_from, gname, uuid_to) {
+    return axios.post('/group', {
+        "uuid_from": uuid_from,
+        "gname": gname,
+        "uuid_to": uuid_to
+    })
+}

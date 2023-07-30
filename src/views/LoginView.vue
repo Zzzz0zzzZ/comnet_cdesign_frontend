@@ -40,6 +40,7 @@ import {localGet, localRemove, localSet, sessionGet, sessionRemove, sessionSet} 
 import {useUserStore} from "../stores/userStore.js";
 import {useChatStore} from "../stores/chatStore.js";
 import {combineTwoHistory} from "../utils/chat.js";
+import {getPreviousChat} from "../api/user.js";
 
 const userLoginInfo = reactive({
   username: '',
@@ -69,6 +70,41 @@ const onClickLogin = async function () {
       console.log(sessionGet("chatHistory"))
       console.log("chatH", chatHistory.chat)
       console.log("schat", store.chat)
+
+      const res_ = await getPreviousChat(res.data.user.uuid)
+
+      const group_msg = res_.data.group_msg
+      const single_msg = res_.data.single_msg
+
+      for (let gmsg of group_msg) {
+        let idd_ = gmsg.group.gid
+        for (let d of gmsg.data) {
+          let ddd_ = {
+            "from": d.from,
+            "time": d.time,
+            "msg_type": d.msg_type,
+            "msg": d.text
+          }
+          chatStore.combineMessage(idd_, ddd_)
+        }
+      }
+
+      for (let smsg of single_msg) {
+        let idd_ = smsg.user_from.uuid
+        for (let d of smsg.data) {
+          let ddd_ = {
+            "from": d.from,
+            "time": d.time,
+            "msg_type": d.msg_type,
+            "msg": d.text
+          }
+          chatStore.combineMessage(idd_, ddd_)
+        }
+      }
+
+
+
+      console.log("previous", res_)
     }
     //
     // const chatHistory = localGet("chatHistory")

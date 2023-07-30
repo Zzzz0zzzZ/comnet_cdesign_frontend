@@ -19,7 +19,7 @@
             <template #title><b>我的IMS&nbsp;&nbsp;</b>
             </template>
             <el-menu-item index="2-1"><b>个人主页&nbsp;&nbsp;(用户: {{ username }})</b></el-menu-item>
-            <el-menu-item index="2-2"><b>资料设置</b></el-menu-item>
+            <el-menu-item index="2-2"><b>更改密码</b></el-menu-item>
             <el-menu-item index="2-3"><b>退出登录</b></el-menu-item>
           </el-sub-menu>
         </el-menu>
@@ -47,7 +47,7 @@ const selectActionMap = {
   "0": () => router.push("/home"),
   "1": () => router.push("/relation"),
   "2-1": () => router.push("/userinfo"),
-  "2-2": () => router.push("/settings"),
+  "2-2": () => router.push("/change_password"),
   "2-3": () => {
 
     const hist = sessionGet("chatHistory")
